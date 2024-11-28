@@ -1,0 +1,8 @@
+{
+    "extends": "./tsconfig.json",
+    "include": [
+        "src/**/*", // ソースコード全体
+        "tests/**/*", // テストコード全体
+        "vite-env.d.ts" // Vite 用の型定義ファイル
+    ]
+}
