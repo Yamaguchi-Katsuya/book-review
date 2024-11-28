@@ -54,7 +54,7 @@ function Login() {
               onChange={handleEmailChange}
               className="p-2 rounded-md border-2 border-gray-300"
             />
-            {emailError && <p className="text-red-500">{emailError}</p>}
+            {emailError && <p id="emailError" className="text-red-500">{emailError}</p>}
           </div>
           <div className="flex flex-col items-center justify-center w-full">
             <label htmlFor="password" className="text-sm font-bold">
@@ -69,7 +69,7 @@ function Login() {
               onChange={handlePasswordChange}
               className="p-2 rounded-md border-2 border-gray-300"
             />
-            {passwordError && <p className="text-red-500">{passwordError}</p>}
+            {passwordError && <p id="passwordError" className="text-red-500">{passwordError}</p>}
           </div>
           <button
             type="submit"
