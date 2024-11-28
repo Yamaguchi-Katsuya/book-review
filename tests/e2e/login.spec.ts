@@ -20,14 +20,22 @@ test('Loginボタンが表示されている', async ({ page }) => {
   await expect(page.locator('button[type="submit"]')).toBeVisible()
 })
 
-test('Emailフィールドの入力値に不備がある場合、エラーが表示される', async ({ page }) => {
+test('Emailフィールドの入力値に不備がある場合、エラーが表示される', async ({
+  page,
+}) => {
   await page.goto('http://localhost:5173/login')
   await page.locator('input[id="email"]').fill('invalid-email')
-  await expect(page.locator('p[id="emailError"]')).toHaveText('メールアドレスが不正です')
+  await expect(page.locator('p[id="emailError"]')).toHaveText(
+    'メールアドレスが不正です'
+  )
 })
 
-test('Passwordフィールドの入力値に不備がある場合、エラーが表示される', async ({ page }) => {
+test('Passwordフィールドの入力値に不備がある場合、エラーが表示される', async ({
+  page,
+}) => {
   await page.goto('http://localhost:5173/login')
   await page.locator('input[id="password"]').fill('short')
-  await expect(page.locator('p[id="passwordError"]')).toHaveText('パスワードは8文字以上で入力してください')
+  await expect(page.locator('p[id="passwordError"]')).toHaveText(
+    'パスワードは8文字以上で入力してください'
+  )
 })
