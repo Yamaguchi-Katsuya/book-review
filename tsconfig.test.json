@@ -1,0 +1,25 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "types": [
+            "jest",
+            "@testing-library/jest-dom"
+        ],
+        "moduleResolution": "Node",
+        "allowSyntheticDefaultImports": true,
+        "baseUrl": ".",
+        "paths": {
+            "@/*": [
+                "src/*"
+            ]
+        }
+    },
+    "include": [
+        "tests/**/*",
+        "tests/vitest-setup.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
+}
