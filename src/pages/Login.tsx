@@ -1,84 +1,95 @@
-import { useState } from 'react'
+import { login } from '@/api/user';
+import { ApiError } from '@/types/error';
+import { LoginApiRequest, LoginApiResponse } from '@/types/user';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
+import { useCookies } from 'react-cookie';
+import { useForm } from 'react-hook-form';
+import { Link, useNavigate } from 'react-router-dom';
+import { z } from 'zod';
 
 function Login() {
-  const [email, setEmail] = useState('')
-  const [emailError, setEmailError] = useState('')
-  const [password, setPassword] = useState('')
-  const [passwordError, setPasswordError] = useState('')
+  const [error, setError] = useState<ApiError | null>(null);
+  const [, setCookie] = useCookies(['token']);
+  const navigate = useNavigate();
+  const schema = z.object({
+    email: z.string()
+      .min(1, 'メールアドレスは必須です。')
+      .email('メールアドレスが不正です'),
+    password: z.string()
+      .min(1, 'パスワードは必須です。')
+      .min(8, 'パスワードは8文字以上で入力してください'),
+  });
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: zodResolver(schema),
+  });
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (
-      !e.target.value.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
-    ) {
-      setEmailError('メールアドレスが不正です')
-    } else {
-      setEmailError('')
+  const onSubmit = (data: any) => {
+    const request: LoginApiRequest = {
+      email: data.email,
+      password: data.password,
     }
-    setEmail(e.target.value)
-  }
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value.length < 8) {
-      setPasswordError('パスワードは8文字以上で入力してください')
-    } else {
-      setPasswordError('')
-    }
-    setPassword(e.target.value)
-  }
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    console.log(email, password)
+    login(request).then((res) => {
+      if ("error" in res && res.error) {
+        setError(res);
+      } else {
+        const response = res as LoginApiResponse;
+        setCookie('token', response.token);
+        alert("ログインに成功しました");
+        navigate("/");
+      }
+    })
   }
 
   return (
     <>
-      <h1 className="text-2xl font-bold text-center mt-4">Login</h1>
-
-      <div className="flex flex-col items-center justify-center mt-4 w-full">
-        <form
-          action="#"
-          onSubmit={handleSubmit}
-          className="grid gap-4 w-1/2 justify-center"
-        >
-          <div className="flex flex-col items-center justify-center w-full">
-            <label htmlFor="email" className="text-sm font-bold">
-              Email
-            </label>
-            <input
-              type="text"
-              id="email"
-              name="email"
-              placeholder="Email"
-              value={email}
-              onChange={handleEmailChange}
-              className="p-2 rounded-md border-2 border-gray-300"
-            />
-            {emailError && <p id="emailError" className="text-red-500">{emailError}</p>}
-          </div>
-          <div className="flex flex-col items-center justify-center w-full">
-            <label htmlFor="password" className="text-sm font-bold">
-              パスワード
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Password"
-              value={password}
-              onChange={handlePasswordChange}
-              className="p-2 rounded-md border-2 border-gray-300"
-            />
-            {passwordError && <p id="passwordError" className="text-red-500">{passwordError}</p>}
-          </div>
-          <button
-            type="submit"
-            className="bg-blue-500 text-white p-2 rounded-md w-full"
+      <main className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4/5 flex flex-col items-center gap-8'>
+        <h1 className="text-4xl font-bold text-center">Login</h1>
+        {error && <p className="text-red-500">コード：{error.errorCode}<br />メッセージ：{error.errorMessageJP}</p>}
+        <div className="flex flex-col items-center justify-center mt-8 w-full">
+          <form
+            action="#"
+            onSubmit={handleSubmit(onSubmit)}
+            className="grid grid-cols-1 gap-8 w-2/5 justify-center"
           >
-            Login
-          </button>
-        </form>
-      </div>
+            <div className="flex flex-col items-center justify-center w-full gap-3">
+              <label htmlFor="email" className="text-2xl font-bold">
+                Email
+              </label>
+              <input
+                {...register('email')}
+                type="text"
+                id="email"
+                placeholder="Email"
+                className="p-2 rounded-md border-2 border-gray-300 w-full"
+              />
+              {errors.email && <p id="emailError" className="text-red-500">{errors.email.message as string}</p>}
+            </div>
+            <div className="flex flex-col items-center justify-center w-full gap-3">
+              <label htmlFor="password" className="text-2xl font-bold">
+                パスワード
+              </label>
+              <input
+                type="password"
+                id="password"
+                placeholder="Password"
+                {...register('password', { required: true })}
+                className="p-2 rounded-md border-2 border-gray-300 w-full"
+              />
+              {errors.password && <p id="passwordError" className="text-red-500">{errors.password.message as string}</p>}
+            </div>
+            <button
+              type="submit"
+              className="bg-blue-500 text-white p-2 rounded-md w-full text-2xl font-bold"
+            >
+              Login
+            </button>
+          </form>
+        </div>
+        <div className="mt-4">
+          <Link className='text-blue-500 underline text-xl' to="/signup">新規登録はこちらから</Link>
+        </div>
+      </main>
     </>
   )
 }
