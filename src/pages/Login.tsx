@@ -1,51 +1,67 @@
-import { login } from '@/api/user';
-import { ApiError } from '@/types/error';
-import { LoginApiRequest, LoginApiResponse } from '@/types/user';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
-import { useCookies } from 'react-cookie';
-import { useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
-import { z } from 'zod';
+import { login } from '@/api/user'
+import { handleApiError } from '@/handler/apiError'
+import { ApiError } from '@/types/error'
+import { LoginApiRequest } from '@/types/user'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useState } from 'react'
+import { useCookies } from 'react-cookie'
+import { useForm } from 'react-hook-form'
+import { Link, useNavigate } from 'react-router-dom'
+import { z } from 'zod'
+
+interface LoginForm {
+  email: string;
+  password: string;
+}
 
 function Login() {
-  const [error, setError] = useState<ApiError | null>(null);
-  const [, setCookie] = useCookies(['token']);
-  const navigate = useNavigate();
+  const [error, setError] = useState<ApiError | null>(null)
+  const [, setCookie] = useCookies()
+  const navigate = useNavigate()
   const schema = z.object({
-    email: z.string()
+    email: z
+      .string()
       .min(1, 'メールアドレスは必須です。')
       .email('メールアドレスが不正です'),
-    password: z.string()
+    password: z
+      .string()
       .min(1, 'パスワードは必須です。')
       .min(8, 'パスワードは8文字以上で入力してください'),
-  });
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  })
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginForm>({
     resolver: zodResolver(schema),
-  });
+  })
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: LoginForm) => {
     const request: LoginApiRequest = {
       email: data.email,
       password: data.password,
     }
-    login(request).then((res) => {
-      if ("error" in res && res.error) {
-        setError(res);
-      } else {
-        const response = res as LoginApiResponse;
-        setCookie('token', response.token);
-        alert("ログインに成功しました");
-        navigate("/");
-      }
-    })
+    login(request)
+      .then((res) => {
+        setCookie('token', res.token)
+        navigate('/')
+      })
+      .catch((err) => {
+        setError(handleApiError(err))
+      })
   }
 
   return (
     <>
-      <main className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4/5 flex flex-col items-center gap-8'>
+      <main className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4/5 flex flex-col items-center gap-8">
         <h1 className="text-4xl font-bold text-center">Login</h1>
-        {error && <p className="text-red-500">コード：{error.errorCode}<br />メッセージ：{error.errorMessageJP}</p>}
+        {error && (
+          <p className="text-red-500">
+            コード：{error.errorCode}
+            <br />
+            メッセージ：{error.errorMessageJP}
+          </p>
+        )}
         <div className="flex flex-col items-center justify-center mt-8 w-full">
           <form
             action="#"
@@ -63,7 +79,11 @@ function Login() {
                 placeholder="Email"
                 className="p-2 rounded-md border-2 border-gray-300 w-full"
               />
-              {errors.email && <p id="emailError" className="text-red-500">{errors.email.message as string}</p>}
+              {errors.email && (
+                <p id="emailError" className="text-red-500">
+                  {errors.email.message as string}
+                </p>
+              )}
             </div>
             <div className="flex flex-col items-center justify-center w-full gap-3">
               <label htmlFor="password" className="text-2xl font-bold">
@@ -76,7 +96,11 @@ function Login() {
                 {...register('password', { required: true })}
                 className="p-2 rounded-md border-2 border-gray-300 w-full"
               />
-              {errors.password && <p id="passwordError" className="text-red-500">{errors.password.message as string}</p>}
+              {errors.password && (
+                <p id="passwordError" className="text-red-500">
+                  {errors.password.message as string}
+                </p>
+              )}
             </div>
             <button
               type="submit"
@@ -87,7 +111,9 @@ function Login() {
           </form>
         </div>
         <div className="mt-4">
-          <Link className='text-blue-500 underline text-xl' to="/signup">新規登録はこちらから</Link>
+          <Link className="text-blue-500 underline text-xl" to="/signup">
+            新規登録はこちらから
+          </Link>
         </div>
       </main>
     </>

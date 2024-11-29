@@ -1,31 +1,31 @@
 export type User = {
-  name: string;
-  iconUrl: string;
-};
+  name: string
+  iconUrl: string
+}
 
 export type SignUpApiRequest = {
-  name: string;
-  email: string;
-  password: string;
-};
+  name: string
+  email: string
+  password: string
+}
 
 export type SignUpApiResponse = {
-  token: string;
+  token: string
 }
 
 export type LoginApiRequest = {
-  email: string;
-  password: string;
-};
+  email: string
+  password: string
+}
 
 export type LoginApiResponse = {
-  token: string;
+  token: string
 }
 
 export type IconUploadApiRequest = {
-  icon: File;
+  icon: File
 }
 
 export type IconUploadApiResponse = {
-  iconUrl: string;
+  iconUrl: string
 }
