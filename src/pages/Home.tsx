@@ -11,14 +11,19 @@ function Home() {
   const handleLogout = () => {
     removeCookie('token');
     navigate('/login');
-  }
+  };
 
   return (
     <>
       <h1>Home</h1>
       <p>{userName}</p>
       <img src={userIconUrl} alt="icon" />
-      <button onClick={handleLogout} className="bg-blue-500 text-white p-2 rounded-md w-full text-2xl font-bold">ログアウト</button>
+      <button
+        onClick={handleLogout}
+        className="bg-blue-500 text-white p-2 rounded-md w-full text-2xl font-bold"
+      >
+        ログアウト
+      </button>
     </>
   );
 }

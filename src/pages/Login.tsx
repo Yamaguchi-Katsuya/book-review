@@ -1,13 +1,13 @@
-import { login } from '@/api/user'
-import { handleApiError } from '@/handler/apiError'
-import { ApiError } from '@/types/error'
-import { LoginApiRequest } from '@/types/user'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
-import { useCookies } from 'react-cookie'
-import { useForm } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router-dom'
-import { z } from 'zod'
+import { login } from '@/api/user';
+import { handleApiError } from '@/handler/apiError';
+import { ApiError } from '@/types/error';
+import { LoginApiRequest } from '@/types/user';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
+import { useCookies } from 'react-cookie';
+import { useForm } from 'react-hook-form';
+import { Link, useNavigate } from 'react-router-dom';
+import { z } from 'zod';
 
 interface LoginForm {
   email: string;
@@ -15,9 +15,9 @@ interface LoginForm {
 }
 
 function Login() {
-  const [error, setError] = useState<ApiError | null>(null)
-  const [, setCookie] = useCookies()
-  const navigate = useNavigate()
+  const [error, setError] = useState<ApiError | null>(null);
+  const [, setCookie] = useCookies();
+  const navigate = useNavigate();
   const schema = z.object({
     email: z
       .string()
@@ -27,29 +27,29 @@ function Login() {
       .string()
       .min(1, 'パスワードは必須です。')
       .min(8, 'パスワードは8文字以上で入力してください'),
-  })
+  });
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginForm>({
     resolver: zodResolver(schema),
-  })
+  });
 
   const onSubmit = (data: LoginForm) => {
     const request: LoginApiRequest = {
       email: data.email,
       password: data.password,
-    }
+    };
     login(request)
       .then((res) => {
-        setCookie('token', res.token)
-        navigate('/')
+        setCookie('token', res.token);
+        navigate('/');
       })
       .catch((err) => {
-        setError(handleApiError(err))
-      })
-  }
+        setError(handleApiError(err));
+      });
+  };
 
   return (
     <>
@@ -117,7 +117,7 @@ function Login() {
         </div>
       </main>
     </>
-  )
+  );
 }
 
-export default Login
+export default Login;

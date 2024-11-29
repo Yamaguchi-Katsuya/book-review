@@ -1,5 +1,5 @@
-import { API_BASE_URL } from '@/const'
-import { ApiError, newApiError } from '@/types/error'
+import { API_BASE_URL } from '@/const';
+import { ApiError, newApiError } from '@/types/error';
 import {
   IconUploadApiRequest,
   IconUploadApiResponse,
@@ -8,9 +8,9 @@ import {
   SignUpApiRequest,
   SignUpApiResponse,
   User,
-} from '@/types/user'
-import axios from 'axios'
-axios.defaults.headers.common['Content-Type'] = 'application/json'
+} from '@/types/user';
+import axios from 'axios';
+axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 export const signUp = async (
   request: SignUpApiRequest
@@ -18,12 +18,12 @@ export const signUp = async (
   return await axios
     .post(`${API_BASE_URL}/users`, request)
     .then((res) => {
-      return res.data as SignUpApiResponse
+      return res.data as SignUpApiResponse;
     })
     .catch((err) => {
-      throw err
-    })
-}
+      throw err;
+    });
+};
 
 export const login = async (
   request: LoginApiRequest
@@ -31,12 +31,12 @@ export const login = async (
   return await axios
     .post(`${API_BASE_URL}/signin`, request)
     .then((res) => {
-      return res.data as LoginApiResponse
+      return res.data as LoginApiResponse;
     })
     .catch((err) => {
-      throw err
-    })
-}
+      throw err;
+    });
+};
 
 export const getUser = async (token: string): Promise<User> => {
   return await axios
@@ -49,19 +49,19 @@ export const getUser = async (token: string): Promise<User> => {
       return {
         name: res.data.name,
         iconUrl: res.data.iconUrl,
-      }
+      };
     })
     .catch((err) => {
-      throw err
-    })
-}
+      throw err;
+    });
+};
 
 export const iconUpload = async (
   request: IconUploadApiRequest,
   token: string
 ): Promise<IconUploadApiResponse | ApiError> => {
   if (!token) {
-    return newApiError(401, 'トークンがありません', 'Token is missing')
+    return newApiError(401, 'トークンがありません', 'Token is missing');
   }
 
   return await axios
@@ -74,9 +74,9 @@ export const iconUpload = async (
     .then((res) => {
       return {
         iconUrl: res.data.iconUrl,
-      }
+      };
     })
     .catch((err) => {
-      throw err
-    })
-}
+      throw err;
+    });
+};

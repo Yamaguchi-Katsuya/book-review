@@ -1,9 +1,9 @@
 export type ApiError = {
-  error: boolean
-  errorCode: number
-  errorMessageJP: string
-  errorMessageEN: string
-}
+  error: boolean;
+  errorCode: number;
+  errorMessageJP: string;
+  errorMessageEN: string;
+};
 
 export const newApiError = (
   errorCode: number,
@@ -15,5 +15,5 @@ export const newApiError = (
     errorCode,
     errorMessageJP,
     errorMessageEN,
-  }
-}
+  };
+};

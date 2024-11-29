@@ -14,7 +14,9 @@ type AuthContextType = {
   isLoading: boolean;
 };
 
-export const AuthContext = createContext<AuthContextType>({} as AuthContextType);
+export const AuthContext = createContext<AuthContextType>(
+  {} as AuthContextType
+);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [userAuth, setUserAuth] = useState(false);
@@ -23,7 +25,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [cookies, , removeCookie] = useCookies();
   const navigate = useNavigate();
-
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -66,5 +67,5 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     >
       {children}
     </AuthContext.Provider>
-  )
+  );
 };

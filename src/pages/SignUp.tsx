@@ -26,30 +26,40 @@ function SignUp() {
   const [, setCookie] = useCookies(['token']);
   const navigate = useNavigate();
 
-  const schema = z.object({
-    name: z.string()
-      .min(1, 'ユーザー名は必須です。')
-      .max(20, 'ユーザー名は20文字以内で入力してください'),
-    email: z.string()
-      .min(1, 'メールアドレスは必須です。')
-      .email('メールアドレスが不正です'),
-    password: z.string()
-      .min(1, 'パスワードは必須です。')
-      .min(8, 'パスワードは8文字以上で入力してください'),
-    passwordConfirm: z.string()
-      .min(1, 'パスワード確認は必須です。')
-      .min(8, 'パスワード確認は8文字以上で入力してください'),
-  }).superRefine(({ password, passwordConfirm }, ctx) => {
-    if (password !== passwordConfirm) {
-      ctx.addIssue({
-        path: ['passwordConfirm'],
-        code: 'custom',
-        message: 'パスワードが一致しません',
-      });
-    }
-  });
+  const schema = z
+    .object({
+      name: z
+        .string()
+        .min(1, 'ユーザー名は必須です。')
+        .max(20, 'ユーザー名は20文字以内で入力してください'),
+      email: z
+        .string()
+        .min(1, 'メールアドレスは必須です。')
+        .email('メールアドレスが不正です'),
+      password: z
+        .string()
+        .min(1, 'パスワードは必須です。')
+        .min(8, 'パスワードは8文字以上で入力してください'),
+      passwordConfirm: z
+        .string()
+        .min(1, 'パスワード確認は必須です。')
+        .min(8, 'パスワード確認は8文字以上で入力してください'),
+    })
+    .superRefine(({ password, passwordConfirm }, ctx) => {
+      if (password !== passwordConfirm) {
+        ctx.addIssue({
+          path: ['passwordConfirm'],
+          code: 'custom',
+          message: 'パスワードが一致しません',
+        });
+      }
+    });
 
-  const { register, handleSubmit, formState: { errors } } = useForm<SignUpForm>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignUpForm>({
     resolver: zodResolver(schema),
   });
 
@@ -84,11 +94,17 @@ function SignUp() {
       });
 
       setSuccess(true);
-      setCookie('token', signUpResponse.token, { httpOnly: true, secure: true, sameSite: 'strict' });
+      setCookie('token', signUpResponse.token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'strict',
+      });
 
       // アイコンのアップロード
       const compressedIcon = await compressImage(icon);
-      const iconUploadRequest: IconUploadApiRequest = { icon: compressedIcon as File };
+      const iconUploadRequest: IconUploadApiRequest = {
+        icon: compressedIcon as File,
+      };
 
       await iconUpload(iconUploadRequest, signUpResponse.token);
       navigate('/');
@@ -99,47 +115,126 @@ function SignUp() {
   };
 
   return (
-    <main className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4/5 flex flex-col items-center gap-8'>
+    <main className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4/5 flex flex-col items-center gap-8">
       <h1 className="text-4xl font-bold text-center">新規登録</h1>
 
-      {error && <p className="text-red-500">コード：{error.errorCode}<br />メッセージ：{error.errorMessageJP}</p>}
-      {success && <p className="text-green-500">新規登録が完了しました。アイコンのアップロードを開始します。</p>}
+      {error && (
+        <p className="text-red-500">
+          コード：{error.errorCode}
+          <br />
+          メッセージ：{error.errorMessageJP}
+        </p>
+      )}
+      {success && (
+        <p className="text-green-500">
+          新規登録が完了しました。アイコンのアップロードを開始します。
+        </p>
+      )}
 
-      <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 gap-8 w-2/5 justify-center">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="grid grid-cols-1 gap-8 w-2/5 justify-center"
+      >
         <div className="flex flex-col items-center justify-center w-full gap-3">
-          <label htmlFor="name" className="text-2xl font-bold">ユーザー名</label>
-          <input {...register('name')} type="text" id="name" placeholder="ユーザー名" className="p-2 rounded-md border-2 border-gray-300 w-full" />
-          {errors.name && <p id="nameError" className="text-red-500">{errors.name.message as string}</p>}
+          <label htmlFor="name" className="text-2xl font-bold">
+            ユーザー名
+          </label>
+          <input
+            {...register('name')}
+            type="text"
+            id="name"
+            placeholder="ユーザー名"
+            className="p-2 rounded-md border-2 border-gray-300 w-full"
+          />
+          {errors.name && (
+            <p id="nameError" className="text-red-500">
+              {errors.name.message as string}
+            </p>
+          )}
         </div>
 
         <div className="flex flex-col items-center justify-center w-full gap-3">
-          <label htmlFor="email" className="text-2xl font-bold">Email</label>
-          <input {...register('email')} type="text" id="email" placeholder="Email" className="p-2 rounded-md border-2 border-gray-300 w-full" />
-          {errors.email && <p id="emailError" className="text-red-500">{errors.email.message as string}</p>}
+          <label htmlFor="email" className="text-2xl font-bold">
+            Email
+          </label>
+          <input
+            {...register('email')}
+            type="text"
+            id="email"
+            placeholder="Email"
+            className="p-2 rounded-md border-2 border-gray-300 w-full"
+          />
+          {errors.email && (
+            <p id="emailError" className="text-red-500">
+              {errors.email.message as string}
+            </p>
+          )}
         </div>
 
         <div className="flex flex-col items-center justify-center w-full gap-3">
-          <label htmlFor="password" className="text-2xl font-bold">パスワード</label>
-          <input {...register('password')} type="password" id="password" placeholder="Password" className="p-2 rounded-md border-2 border-gray-300 w-full" />
-          {errors.password && <p id="passwordError" className="text-red-500">{errors.password.message as string}</p>}
+          <label htmlFor="password" className="text-2xl font-bold">
+            パスワード
+          </label>
+          <input
+            {...register('password')}
+            type="password"
+            id="password"
+            placeholder="Password"
+            className="p-2 rounded-md border-2 border-gray-300 w-full"
+          />
+          {errors.password && (
+            <p id="passwordError" className="text-red-500">
+              {errors.password.message as string}
+            </p>
+          )}
         </div>
 
         <div className="flex flex-col items-center justify-center w-full gap-3">
-          <label htmlFor="passwordConfirm" className="text-2xl font-bold">パスワード確認</label>
-          <input {...register('passwordConfirm')} type="password" id="passwordConfirm" placeholder="Password" className="p-2 rounded-md border-2 border-gray-300 w-full" />
-          {errors.passwordConfirm && <p id="passwordConfirmError" className="text-red-500">{errors.passwordConfirm.message as string}</p>}
+          <label htmlFor="passwordConfirm" className="text-2xl font-bold">
+            パスワード確認
+          </label>
+          <input
+            {...register('passwordConfirm')}
+            type="password"
+            id="passwordConfirm"
+            placeholder="Password"
+            className="p-2 rounded-md border-2 border-gray-300 w-full"
+          />
+          {errors.passwordConfirm && (
+            <p id="passwordConfirmError" className="text-red-500">
+              {errors.passwordConfirm.message as string}
+            </p>
+          )}
         </div>
 
         <div className="flex flex-col items-center justify-center w-full gap-3">
-          <label htmlFor="icon" className="text-2xl font-bold">アイコン</label>
-          <input type="file" id="icon" onChange={handleIconChange} className="p-2 rounded-md border-2 border-gray-300 w-full" />
-          {iconError && <p id="iconError" className="text-red-500">{iconError}</p>}
+          <label htmlFor="icon" className="text-2xl font-bold">
+            アイコン
+          </label>
+          <input
+            type="file"
+            id="icon"
+            onChange={handleIconChange}
+            className="p-2 rounded-md border-2 border-gray-300 w-full"
+          />
+          {iconError && (
+            <p id="iconError" className="text-red-500">
+              {iconError}
+            </p>
+          )}
         </div>
 
-        <button type="submit" className="bg-blue-500 text-white p-2 rounded-md w-full text-2xl font-bold">新規登録</button>
+        <button
+          type="submit"
+          className="bg-blue-500 text-white p-2 rounded-md w-full text-2xl font-bold"
+        >
+          新規登録
+        </button>
       </form>
 
-      <Link className='text-blue-500 underline text-xl' to="/login">ログインはこちらから</Link>
+      <Link className="text-blue-500 underline text-xl" to="/login">
+        ログインはこちらから
+      </Link>
     </main>
   );
 }
