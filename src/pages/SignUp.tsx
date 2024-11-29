@@ -233,7 +233,7 @@ function SignUp() {
       </form>
 
       <Link className="text-blue-500 underline text-xl" to="/login">
-        ログインはこちらから
+        ログイン
       </Link>
     </main>
   );

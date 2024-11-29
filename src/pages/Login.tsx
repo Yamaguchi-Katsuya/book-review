@@ -112,7 +112,7 @@ function Login() {
         </div>
         <div className="mt-4">
           <Link className="text-blue-500 underline text-xl" to="/signup">
-            新規登録はこちらから
+            新規登録
           </Link>
         </div>
       </main>
