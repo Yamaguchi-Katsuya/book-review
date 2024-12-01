@@ -20,7 +20,10 @@ const AppRoutes = () => {
             <Route path="/reviews" element={<BookPublicReviewList />} />
             {/* ログインしている場合はログインページやサインアップページにアクセスできないようにする */}
             <Route path="/login" element={<Navigate to="/reviews" replace />} />
-            <Route path="/signup" element={<Navigate to="/reviews" replace />} />
+            <Route
+              path="/signup"
+              element={<Navigate to="/reviews" replace />}
+            />
             <Route path="*" element={<NotFound />} />
           </>
         ) : (
