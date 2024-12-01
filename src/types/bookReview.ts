@@ -6,11 +6,11 @@ export type BookReview = {
   review: string;
   reviewer: string;
   isMine: boolean;
-}
+};
 
 export type GetBookReviewsRequest = {
   offset: number;
-}
+};
 
 export type GetBookReviewsResponse = [
   {
@@ -21,5 +21,5 @@ export type GetBookReviewsResponse = [
     review: string;
     reviewer: string;
     isMine: boolean;
-  }
-]
+  },
+];
