@@ -5,20 +5,18 @@ import SignUp from '@/pages/SignUp';
 import Home from '@/pages/Home';
 import { AuthProvider, AuthContext } from '@/providers/AuthProvider';
 import { useContext } from 'react';
-import Loading from '@/pages/Loading';
 
 const AppRoutes = () => {
-  const { userAuth, isLoading } = useContext(AuthContext);
-
-  if (isLoading) {
-    return <Loading />; // ローディング中の画面を表示
-  }
+  const { userAuth } = useContext(AuthContext);
 
   return (
     <Routes>
       {userAuth ? (
         <>
           <Route path="/" element={<Home />} />
+          {/* ログインしている場合はログインページやサインアップページにアクセスできないようにする */}
+          <Route path="/login" element={<Navigate to="/" replace />} />
+          <Route path="/signup" element={<Navigate to="/" replace />} />
           <Route path="*" element={<NotFound />} />
         </>
       ) : (

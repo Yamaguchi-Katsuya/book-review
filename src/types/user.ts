@@ -29,3 +29,8 @@ export type IconUploadApiRequest = {
 export type IconUploadApiResponse = {
   iconUrl: string;
 };
+
+export type GetUserApiResponse = {
+  name: string;
+  iconUrl: string;
+};

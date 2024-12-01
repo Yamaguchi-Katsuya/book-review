@@ -7,7 +7,7 @@ import {
   LoginApiResponse,
   SignUpApiRequest,
   SignUpApiResponse,
-  User,
+  GetUserApiResponse,
 } from '@/types/user';
 import axios from 'axios';
 axios.defaults.headers.common['Content-Type'] = 'application/json';
@@ -38,7 +38,7 @@ export const login = async (
     });
 };
 
-export const getUser = async (token: string): Promise<User> => {
+export const getUser = async (token: string): Promise<GetUserApiResponse> => {
   return await axios
     .get(`${API_BASE_URL}/users`, {
       headers: {

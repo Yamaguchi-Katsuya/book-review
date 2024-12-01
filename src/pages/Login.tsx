@@ -18,6 +18,7 @@ function Login() {
   const [error, setError] = useState<ApiError | null>(null);
   const [, setCookie] = useCookies();
   const navigate = useNavigate();
+
   const schema = z.object({
     email: z
       .string()
@@ -28,6 +29,7 @@ function Login() {
       .min(1, 'パスワードは必須です。')
       .min(8, 'パスワードは8文字以上で入力してください'),
   });
+
   const {
     register,
     handleSubmit,

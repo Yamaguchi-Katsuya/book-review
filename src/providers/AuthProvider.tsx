@@ -1,16 +1,14 @@
 import { createContext, useState, useEffect, ReactNode } from 'react';
 import { useCookies } from 'react-cookie';
 import { getUser } from '@/api/user';
-import { useNavigate } from 'react-router-dom';
+import { GetUserApiResponse, User } from '@/types/user';
 
 type AuthContextType = {
   setUserAuth: (value: boolean) => void;
-  setUserName: (value: string) => void;
-  setUserIconUrl: (value: string) => void;
+  setUser: (user: User) => void;
   setIsLoading: (value: boolean) => void;
   userAuth: boolean;
-  userName: string;
-  userIconUrl: string;
+  user: User;
   isLoading: boolean;
 };
 
@@ -20,48 +18,52 @@ export const AuthContext = createContext<AuthContextType>(
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [userAuth, setUserAuth] = useState(false);
-  const [userName, setUserName] = useState('');
-  const [userIconUrl, setUserIconUrl] = useState('');
+  const [user, setUser] = useState<User>({} as User);
   const [isLoading, setIsLoading] = useState(true);
   const [cookies, , removeCookie] = useCookies();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUser = async () => {
       const token = cookies.token;
       console.log(token);
+      if (!token) {
+        setUserAuth(false);
+        setUser({} as User);
+        setIsLoading(false);
+        return;
+      }
 
       try {
-        const user = await getUser(token);
+        const getUserResponse: GetUserApiResponse = await getUser(token);
+        const user: User = {
+          name: getUserResponse.name,
+          iconUrl: getUserResponse.iconUrl,
+        };
 
         setUserAuth(true);
-        setUserName(user.name);
-        setUserIconUrl(user.iconUrl);
+        setUser(user);
         setIsLoading(false);
       } catch (error) {
         console.error('ユーザー情報の取得に失敗しました:', error);
         removeCookie('token');
         setUserAuth(false);
-        setUserName('');
-        setUserIconUrl('');
+        setUser({} as User);
         setIsLoading(false);
         throw error;
       }
     };
 
     fetchUser();
-  }, [navigate]);
+  }, [cookies.token]);
 
   return (
     <AuthContext.Provider
       value={{
         userAuth,
-        userName,
-        userIconUrl,
+        user,
         isLoading,
         setUserAuth,
-        setUserName,
-        setUserIconUrl,
+        setUser,
         setIsLoading,
       }}
     >

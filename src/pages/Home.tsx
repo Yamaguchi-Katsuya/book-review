@@ -4,7 +4,7 @@ import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 
 function Home() {
-  const { userName, userIconUrl } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [, , removeCookie] = useCookies();
 
@@ -16,8 +16,8 @@ function Home() {
   return (
     <>
       <h1>Home</h1>
-      <p>{userName}</p>
-      <img src={userIconUrl} alt="icon" />
+      <p>{user.name}</p>
+      <img src={user.iconUrl} alt="icon" />
       <button
         onClick={handleLogout}
         className="bg-blue-500 text-white p-2 rounded-md w-full text-2xl font-bold"
