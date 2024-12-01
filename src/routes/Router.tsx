@@ -2,30 +2,34 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Login from '../pages/Login';
 import NotFound from '../pages/NotFound';
 import SignUp from '@/pages/SignUp';
-import Home from '@/pages/Home';
 import { AuthProvider, AuthContext } from '@/providers/AuthProvider';
 import { useContext } from 'react';
+import BaseLayout from '@/components/BaseLayout';
+import BookPublicReviewList from '@/pages/bookReview/BookPublicReviewList';
 
 const AppRoutes = () => {
   const { userAuth } = useContext(AuthContext);
 
   return (
     <Routes>
-      {userAuth ? (
-        <>
-          <Route path="/" element={<Home />} />
-          {/* ログインしている場合はログインページやサインアップページにアクセスできないようにする */}
-          <Route path="/login" element={<Navigate to="/" replace />} />
-          <Route path="/signup" element={<Navigate to="/" replace />} />
-          <Route path="*" element={<NotFound />} />
-        </>
-      ) : (
-        <>
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="*" element={<Navigate to="/login" replace />} />
-        </>
-      )}
+      <Route path="/" element={<BaseLayout />}>
+        {userAuth ? (
+          <>
+            <Route path="/" element={<BookPublicReviewList />} />
+            <Route path="/book-review" element={<BookPublicReviewList />} />
+            {/* ログインしている場合はログインページやサインアップページにアクセスできないようにする */}
+            <Route path="/login" element={<Navigate to="/" replace />} />
+            <Route path="/signup" element={<Navigate to="/" replace />} />
+            <Route path="*" element={<NotFound />} />
+          </>
+        ) : (
+          <>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="*" element={<Navigate to="/login" replace />} />
+          </>
+        )}
+      </Route>
     </Routes>
   );
 };

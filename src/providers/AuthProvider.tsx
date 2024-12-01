@@ -6,20 +6,23 @@ import { GetUserApiResponse, User } from '@/types/user';
 type AuthContextType = {
   setUserAuth: (value: boolean) => void;
   setUser: (user: User) => void;
-  setIsLoading: (value: boolean) => void;
   userAuth: boolean;
   user: User;
-  isLoading: boolean;
+  logout: () => void;
 };
 
 export const AuthContext = createContext<AuthContextType>(
   {} as AuthContextType
 );
 
+export const logout = () => {
+  const [, , removeCookie] = useCookies();
+  removeCookie('token');
+};
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [userAuth, setUserAuth] = useState(false);
   const [user, setUser] = useState<User>({} as User);
-  const [isLoading, setIsLoading] = useState(true);
   const [cookies, , removeCookie] = useCookies();
 
   useEffect(() => {
@@ -29,7 +32,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (!token) {
         setUserAuth(false);
         setUser({} as User);
-        setIsLoading(false);
         return;
       }
 
@@ -42,13 +44,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         setUserAuth(true);
         setUser(user);
-        setIsLoading(false);
       } catch (error) {
         console.error('ユーザー情報の取得に失敗しました:', error);
         removeCookie('token');
         setUserAuth(false);
         setUser({} as User);
-        setIsLoading(false);
         throw error;
       }
     };
@@ -61,10 +61,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       value={{
         userAuth,
         user,
-        isLoading,
+        logout,
         setUserAuth,
         setUser,
-        setIsLoading,
       }}
     >
       {children}
