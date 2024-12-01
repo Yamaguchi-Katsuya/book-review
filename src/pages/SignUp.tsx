@@ -115,7 +115,7 @@ function SignUp() {
   };
 
   return (
-    <main className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4/5 flex flex-col items-center gap-8">
+    <main className="flex flex-col items-center justify-center gap-2 md:gap-4 lg:gap-8">
       <h1 className="text-4xl font-bold text-center">新規登録</h1>
 
       {error && (
