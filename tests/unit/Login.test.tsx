@@ -14,9 +14,7 @@ describe('Login コンポーネント', () => {
     vi.clearAllMocks();
     render(<Login />, {
       wrapper: ({ children }) => (
-        <MemoryRouter initialEntries={["/login"]}>
-          {children}
-        </MemoryRouter>
+        <MemoryRouter initialEntries={['/login']}>{children}</MemoryRouter>
       ),
     });
   });
@@ -36,7 +34,9 @@ describe('Login コンポーネント', () => {
     });
 
     it('Loginボタンが表示されている', () => {
-      expect(screen.getByRole('button', { name: /Login/i })).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /Login/i })
+      ).toBeInTheDocument();
     });
   });
 
