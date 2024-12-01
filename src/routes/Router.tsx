@@ -7,9 +7,14 @@ import { useContext } from 'react';
 import BaseLayout from '@/components/BaseLayout';
 import BookPublicReviewList from '@/pages/bookReview/BookPublicReviewList';
 import Home from '@/pages/Home';
+import Loading from '@/pages/Loading';
 
 const AppRoutes = () => {
-  const { userAuth } = useContext(AuthContext);
+  const { userAuth, isLoading } = useContext(AuthContext);
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <Routes>

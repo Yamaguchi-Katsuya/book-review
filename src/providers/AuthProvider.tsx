@@ -2,12 +2,14 @@ import { createContext, useState, useEffect, ReactNode } from 'react';
 import { useCookies } from 'react-cookie';
 import { getUser } from '@/api/user';
 import { GetUserApiResponse, User } from '@/types/user';
+import { useLocation } from 'react-router-dom';
 
 type AuthContextType = {
   setUserAuth: (value: boolean) => void;
   setUser: (user: User) => void;
   userAuth: boolean;
   user: User;
+  isLoading: boolean;
   logout: () => void;
 };
 
@@ -16,9 +18,11 @@ export const AuthContext = createContext<AuthContextType>(
 );
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [isLoading, setIsLoading] = useState(true);
   const [userAuth, setUserAuth] = useState(false);
   const [user, setUser] = useState<User>({} as User);
   const [cookies, , removeCookie] = useCookies();
+  const location = useLocation();
 
   const logout = () => {
     removeCookie('token');
@@ -27,16 +31,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const fetchUser = async () => {
       const token = cookies.token;
-      console.log(token);
+
       if (!token) {
         setUserAuth(false);
         setUser({} as User);
+        setIsLoading(false);
         return;
       }
 
       try {
         const getUserResponse: GetUserApiResponse = await getUser(token);
         const user: User = {
+          token: token,
           name: getUserResponse.name,
           iconUrl: getUserResponse.iconUrl,
         };
@@ -49,17 +55,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUserAuth(false);
         setUser({} as User);
         throw error;
+      } finally {
+        setIsLoading(true);
       }
     };
 
     fetchUser();
-  }, [cookies.token]);
+  }, [cookies.token, location.pathname]);
 
   return (
     <AuthContext.Provider
       value={{
         userAuth,
         user,
+        isLoading,
         logout,
         setUserAuth,
         setUser,
