@@ -115,7 +115,7 @@ function SignUp() {
   };
 
   return (
-    <main className="flex flex-col items-center justify-center gap-2 md:gap-4 lg:gap-8">
+    <main className="flex flex-col items-center justify-center gap-2 md:gap-4 lg:gap-8 w-full p-4 md:p-8 lg:p-16">
       <h1 className="text-4xl font-bold text-center">新規登録</h1>
 
       {error && (
@@ -133,7 +133,7 @@ function SignUp() {
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="grid grid-cols-1 gap-8 w-2/5 justify-center"
+        className="grid grid-cols-1 gap-8 w-4/5 md:w-3/5 lg:w-2/5 justify-center"
       >
         <div className="flex flex-col items-center justify-center w-full gap-3">
           <label htmlFor="name" className="text-2xl font-bold">
