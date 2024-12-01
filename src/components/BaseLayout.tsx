@@ -7,7 +7,9 @@ export default function BaseLayout() {
     <>
       <main className="min-h-screen flex flex-col">
         <Header />
-        <Outlet />
+        <div className="flex-1 flex items-center justify-center">
+          <Outlet />
+        </div>
         <Footer />
       </main>
     </>

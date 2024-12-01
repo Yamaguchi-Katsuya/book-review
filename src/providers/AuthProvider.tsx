@@ -15,15 +15,14 @@ export const AuthContext = createContext<AuthContextType>(
   {} as AuthContextType
 );
 
-export const logout = () => {
-  const [, , removeCookie] = useCookies();
-  removeCookie('token');
-};
-
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [userAuth, setUserAuth] = useState(false);
   const [user, setUser] = useState<User>({} as User);
   const [cookies, , removeCookie] = useCookies();
+
+  const logout = () => {
+    removeCookie('token');
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
